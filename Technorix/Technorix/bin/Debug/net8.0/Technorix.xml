@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Technorix</name>
+    </assembly>
+    <members>
+        <member name="M:Technorix.Controllers.JobsController.Create(Technorix.DTOs.JobDto)">
+            <summary>
+            create a new job.
+            </summary>
+            <param name="obj">The job data to be created, including title, description, department, location, and closing date.</param>
+            <returns>
+            Returns a 201 Created response with the newly created job's details if successful.
+            Returns 400 Bad Request if the input data is invalid.
+            </returns>
+        </member>
+        <member name="M:Technorix.Controllers.JobsController.Jobs(Technorix.DTOs.listDTO)">
+            <summary>
+            Retrieves a list of jobs with pagination and filters.
+            </summary>
+            <param name="obj">Filter criteria such as search keyword, page number, and page size.</param>
+            <returns>
+            A paginated list of jobs with basic details like title, location, department, and dates.
+            </returns>
+            <response code="200">Returns the list of jobs</response>
+        </member>
+        <member name="M:Technorix.Controllers.JobsController.Details(System.Int32)">
+            <summary>
+            Retrieves detailed information about a specific job by ID.
+            </summary>
+            <param name="id">The unique identifier of the job.</param>
+            <returns>
+            The job details including title, description, department, location, posted date, and closing date.
+            </returns>
+            <response code="200">Returns the job details</response>
+            <response code="404">If the job is not found</response>
+        </member>
+        <member name="M:Technorix.Controllers.JobsController.Update(System.Int32,Technorix.DTOs.JobDto)">
+            <summary>
+            Updates an existing job.
+            </summary>
+            <param name="id">The unique identifier of the job to be updated.</param>
+            <param name="obj">The updated job data.</param>
+            <returns>
+            Returns 200 OK if the job is updated successfully.
+            Returns 404 Not Found if the job does not exist.
+            </returns>
+        </member>
+        <member name="M:Technorix.Controllers.JobsController.Delete(System.Int32)">
+            <summary>
+            Deletes an existing job.
+            </summary>
+            <param name="id">The ID of the job to delete.</param>
+            <returns>
+            Returns 204 No Content if deletion is successful.
+            Returns 404 Not Found if the job does not exist.
+            </returns>
+        </member>
+    </members>
+</doc>

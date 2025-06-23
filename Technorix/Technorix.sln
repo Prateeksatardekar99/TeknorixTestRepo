@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35027.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Teknorix", "Technorix\Teknorix.csproj", "{3EE52A56-0E28-41A1-8D4C-051B7A324268}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject\TestProject.csproj", "{5ECD1BE0-5011-4348-BB94-335BEBF4B49E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3EE52A56-0E28-41A1-8D4C-051B7A324268}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EE52A56-0E28-41A1-8D4C-051B7A324268}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EE52A56-0E28-41A1-8D4C-051B7A324268}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EE52A56-0E28-41A1-8D4C-051B7A324268}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5ECD1BE0-5011-4348-BB94-335BEBF4B49E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5ECD1BE0-5011-4348-BB94-335BEBF4B49E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5ECD1BE0-5011-4348-BB94-335BEBF4B49E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5ECD1BE0-5011-4348-BB94-335BEBF4B49E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8857587C-2567-4449-A94D-620284C95DB9}
+	EndGlobalSection
+EndGlobal

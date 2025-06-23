@@ -1,0 +1,174 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\TechnorixWebapi\\Technorix\\Technorix\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{98835187-9280-40DB-8373-709E8424D479}|Technorix.csproj|d:\\technorixwebapi\\technorix\\technorix\\controllers\\jobscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98835187-9280-40DB-8373-709E8424D479}|Technorix.csproj|solutionrelative:controllers\\jobscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A8E89EA-4471-4F80-A588-57C43EE7E383}|..\\TestProject\\TestProject.csproj|d:\\technorixwebapi\\technorix\\testproject\\logincontrollertest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A8E89EA-4471-4F80-A588-57C43EE7E383}|..\\TestProject\\TestProject.csproj|d:\\technorixwebapi\\technorix\\testproject\\jobscontrollertest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98835187-9280-40DB-8373-709E8424D479}|Technorix.csproj|d:\\technorixwebapi\\technorix\\technorix\\controllers\\locationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98835187-9280-40DB-8373-709E8424D479}|Technorix.csproj|solutionrelative:controllers\\locationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98835187-9280-40DB-8373-709E8424D479}|Technorix.csproj|d:\\technorixwebapi\\technorix\\technorix\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98835187-9280-40DB-8373-709E8424D479}|Technorix.csproj|solutionrelative:controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98835187-9280-40DB-8373-709E8424D479}|Technorix.csproj|d:\\technorixwebapi\\technorix\\technorix\\controllers\\departmentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98835187-9280-40DB-8373-709E8424D479}|Technorix.csproj|solutionrelative:controllers\\departmentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98835187-9280-40DB-8373-709E8424D479}|Technorix.csproj|d:\\technorixwebapi\\technorix\\technorix\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98835187-9280-40DB-8373-709E8424D479}|Technorix.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98835187-9280-40DB-8373-709E8424D479}|Technorix.csproj|d:\\technorixwebapi\\technorix\\technorix\\technorix.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{98835187-9280-40DB-8373-709E8424D479}|Technorix.csproj|solutionrelative:technorix.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A8E89EA-4471-4F80-A588-57C43EE7E383}|..\\TestProject\\TestProject.csproj|d:\\technorixwebapi\\technorix\\testproject\\testproject.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "jobsControllerTest.cs",
+              "DocumentMoniker": "D:\\TechnorixWebapi\\Technorix\\TestProject\\jobsControllerTest.cs",
+              "RelativeDocumentMoniker": "..\\TestProject\\jobsControllerTest.cs",
+              "ToolTip": "D:\\TechnorixWebapi\\Technorix\\TestProject\\jobsControllerTest.cs",
+              "RelativeToolTip": "..\\TestProject\\jobsControllerTest.cs",
+              "ViewState": "AQIAAIkAAAAAAAAAAAA8wH0AAAAvAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-23T04:02:45.095Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "loginController.cs",
+              "DocumentMoniker": "D:\\TechnorixWebapi\\Technorix\\Technorix\\Controllers\\loginController.cs",
+              "RelativeDocumentMoniker": "Controllers\\loginController.cs",
+              "ToolTip": "D:\\TechnorixWebapi\\Technorix\\Technorix\\Controllers\\loginController.cs",
+              "RelativeToolTip": "Controllers\\loginController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAAXAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-23T03:54:16.899Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "LocationController.cs",
+              "DocumentMoniker": "D:\\TechnorixWebapi\\Technorix\\Technorix\\Controllers\\LocationController.cs",
+              "RelativeDocumentMoniker": "Controllers\\LocationController.cs",
+              "ToolTip": "D:\\TechnorixWebapi\\Technorix\\Technorix\\Controllers\\LocationController.cs",
+              "RelativeToolTip": "Controllers\\LocationController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACkAAAAvAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-23T03:54:03.543Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "DepartmentsController.cs",
+              "DocumentMoniker": "D:\\TechnorixWebapi\\Technorix\\Technorix\\Controllers\\DepartmentsController.cs",
+              "RelativeDocumentMoniker": "Controllers\\DepartmentsController.cs",
+              "ToolTip": "D:\\TechnorixWebapi\\Technorix\\Technorix\\Controllers\\DepartmentsController.cs",
+              "RelativeToolTip": "Controllers\\DepartmentsController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-22T16:23:00.523Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "jobsController.cs",
+              "DocumentMoniker": "D:\\TechnorixWebapi\\Technorix\\Technorix\\Controllers\\jobsController.cs",
+              "RelativeDocumentMoniker": "Controllers\\jobsController.cs",
+              "ToolTip": "D:\\TechnorixWebapi\\Technorix\\Technorix\\Controllers\\jobsController.cs",
+              "RelativeToolTip": "Controllers\\jobsController.cs",
+              "ViewState": "AQIAANsAAAAAAAAAAAAQwO8AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-22T16:23:03.032Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "loginControllerTest.cs",
+              "DocumentMoniker": "D:\\TechnorixWebapi\\Technorix\\TestProject\\loginControllerTest.cs",
+              "RelativeDocumentMoniker": "..\\TestProject\\loginControllerTest.cs",
+              "ToolTip": "D:\\TechnorixWebapi\\Technorix\\TestProject\\loginControllerTest.cs",
+              "RelativeToolTip": "..\\TestProject\\loginControllerTest.cs",
+              "ViewState": "AQIAAEEAAAAAAAAAAAAIwFgAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-23T04:06:27.728Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\TechnorixWebapi\\Technorix\\Technorix\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "D:\\TechnorixWebapi\\Technorix\\Technorix\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AQIAADAAAAAAAAAAAAAmwD0AAAAiAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-22T16:21:56.034Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Technorix",
+              "DocumentMoniker": "D:\\TechnorixWebapi\\Technorix\\Technorix\\Technorix.csproj",
+              "RelativeDocumentMoniker": "Technorix.csproj",
+              "ToolTip": "D:\\TechnorixWebapi\\Technorix\\Technorix\\Technorix.csproj",
+              "RelativeToolTip": "Technorix.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAiAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-06-22T16:20:00.758Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "TestProject",
+              "DocumentMoniker": "D:\\TechnorixWebapi\\Technorix\\TestProject\\TestProject.csproj",
+              "RelativeDocumentMoniker": "..\\TestProject\\TestProject.csproj",
+              "ToolTip": "D:\\TechnorixWebapi\\Technorix\\TestProject\\TestProject.csproj",
+              "RelativeToolTip": "..\\TestProject\\TestProject.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-06-22T15:39:53.19Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
