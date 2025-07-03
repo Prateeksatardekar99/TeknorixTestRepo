@@ -1,68 +1,113 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Technorix.DTOs;
 using Technorix.Models;
+using Technorix.Repository;
 
 namespace Technorix.Controllers
 {
-
+    /// <summary>
+    /// Manages department-related operations.
+    /// </summary>
     [ApiController]
-    [Authorize(Roles = "Admin")]
-
-
     [Route("api/v1/[controller]")]
-    //[Authorize]
-
-    public class DepartmentsController : Controller
+    public class DepartmentsController : ControllerBase
     {
-        private JobsDbContext context;
+        private readonly IdepartmentsRepository _departmentRepo;
 
-
-
-        public DepartmentsController(JobsDbContext context)
+        public DepartmentsController(IdepartmentsRepository departmentRepo)
         {
-
-            this.context = context;
+            _departmentRepo = departmentRepo;
         }
 
-
-
-      
-
+        /// <summary>
+        /// Creates a new department.
+        /// </summary>
         [HttpPost]
-        public async Task<ActionResult> Create([FromBody] Department obj)
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> Create([FromBody] DepartmentCreateDto obj)
         {
-            // Add the Department object directly
-            context.Departments.Add(obj);
+            try
+            {
+                if (obj == null || string.IsNullOrWhiteSpace(obj.Title))
+                    return BadRequest("Invalid department data.");
 
-            // Save changes to the database
-            await context.SaveChangesAsync();
+                var department = new Department
+                {
+                    Title = obj.Title
+                };
 
-            // Return 201 Created with the new department ID
-            return Created();
+                 await _departmentRepo.Create(department);
+                return StatusCode(StatusCodes.Status201Created);
+            }
+            catch (Exception ex)
+            {
+                
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-
+        /// <summary>
+        /// Gets a list of all departments.
+        /// </summary>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Department>>> GetDepartments()
+        [Authorize(Roles = "Admin,User")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<DepartmentResponseDto>>> GetDepartments()
         {
-            var departments = await context.Departments.ToListAsync();
-            return Ok(departments);
+            try
+            {
+                var departments = await _departmentRepo.GetAll();
+
+                var result = departments.Select(d => new DepartmentResponseDto
+                {
+                    Id = d.Id,
+                    Title = d.Title
+                });
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
+        /// <summary>
+        /// Updates an existing department.
+        /// </summary>
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateDepartment(int id, [FromBody] Department obj)
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> UpdateDepartment(int id, [FromBody] DepartmentCreateDto obj)
         {
-            var department = await context.Departments.FindAsync(id);
-            if (department == null)
-                return NotFound();
+            try
+            {
+                if (obj == null || id < 0 || string.IsNullOrWhiteSpace(obj.Title))
+                    return BadRequest("Invalid department data.");
 
-            department.Title = obj.Title;
-            await context.SaveChangesAsync();
+                var data = new Department
+                {
+                   Id=id,
+                    Title = obj.Title
+                };
 
-            return Ok();
+                bool result = await _departmentRepo.Update(data);
+                if (!result)
+                    return NotFound($"Department with ID {id} not found.");
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
-
     }
 }

@@ -1,89 +1,85 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Technorix.Models;
+using System.Threading.Tasks;
+using Technorix.Controllers;
 using Technorix.DTOs;
-using Technorix.Controllers.Technorix.Controllers;
+using Technorix.Models;
+using Technorix.Repository;
+using Xunit;
 
 namespace TestProject
 {
-  
 
-
-        public class loginControllerTest
+    public class LoginControllerTest
     {
-            private readonly JobsDbContext _context;
-            private readonly loginController _controller;
+        private readonly Mock<ILoginRepository> _mockRepo;
+        private readonly LoginController _controller;
 
-            public loginControllerTest()
+        public LoginControllerTest()
+        {
+            _mockRepo = new Mock<ILoginRepository>();
+
+            _controller = new LoginController(_mockRepo.Object);
+        }
+
+        [Fact]
+        
+        public async Task Login_WithValidCredentials_ReturnsToken()
+        {
+            var loginDto = new loginRequestDTO
             {
-                var options = new DbContextOptionsBuilder<JobsDbContext>()
-                    .UseInMemoryDatabase(databaseName: "jobsDb")
-                    .Options;
+                Username = "testuser",
+                Password = "password123"
+            };
 
-                _context = new JobsDbContext(options);
-
-                // Seed data
-                _context.Users.Add(new User
-                {
-                    
-                    Username = "testuser",
-                    Passwordhash = new Microsoft.AspNetCore.Identity.PasswordHasher<object>()
-                        .HashPassword(null, "password123"),
-                    Userrole = "User"
-                });
-                _context.SaveChanges();
-
-                var jwtSettings = Options.Create(new JwtSettings
-                {
-                    Key = "hdsjfhdjshfjdshfjksdhfjdshfjkdhfkjsdhfjk",
-                    Issuer = "TeknorixIssuer",
-                    Audience = "TeknorixUsers",
-                    ExpiryMinutes = 60
-                });
-
-                _controller = new loginController(_context, jwtSettings);
-            }
-
-            [Fact]
-            public async Task Login_WithValidCredentials_ReturnsToken()
+            var user = new User
             {
-                var loginDto = new loginDTO
-                {
-                    Username = "testuser",
-                    Password = "password123"
-                };
+                Username = "testuser",
+                PasswordHash = new PasswordHasher<object>().HashPassword(null, "password123"),
+                UserRole = "User"
+            };
 
-                var result = await _controller.Login(loginDto);
+            _mockRepo.Setup(r => r.GetUserByUsername("testuser")).ReturnsAsync(user);
+            _mockRepo.Setup(r => r.VerifyPassword(It.IsAny<string>(), "password123")).Returns(true);
+            _mockRepo.Setup(r => r.GenerateJwtToken(user)).Returns("mocked-jwt-token");
 
-                var okResult = Assert.IsType<OkObjectResult>(result);
-                Assert.NotNull(okResult.Value);
-            }
+            var result = await _controller.Login(loginDto);
 
-            [Fact]
-            public async Task Login_WithInvalidPassword_ReturnsUnauthorized()
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var tokenObj = Assert.IsType<TokenResponseDto>(okResult.Value);
+
+            Assert.NotNull(tokenObj);
+            Assert.Equal("mocked-jwt-token", tokenObj.Token);
+        }
+
+
+
+        [Fact]
+        public async Task Login_WithInvalidPassword_ReturnsUnauthorized()
+        {
+            var loginDto = new loginRequestDTO
             {
-                var loginDto = new loginDTO
-                {
-                    Username = "testuser",
-                    Password = "wrongpassword"
-                };
+                Username = "testuser",
+                Password = "wrongpassword"
+            };
 
-                var result = await _controller.Login(loginDto);
+            var user = new User
+            {
+                Username = "testuser",
+                PasswordHash = "hashed-password"
+            };
 
-                Assert.IsType<UnauthorizedObjectResult>(result);
-            }
+            _mockRepo.Setup(r => r.GetUserByUsername("testuser"))
+                          .ReturnsAsync(user);
+
+            _mockRepo.Setup(r => r.VerifyPassword("hashed-password", "wrongpassword"))
+                          .Returns(false);
+
+            var result = await _controller.Login(loginDto);
+
+            var unauthorizedResult = Assert.IsType<UnauthorizedObjectResult>(result);
+            Assert.Equal("Invalid password", unauthorizedResult.Value);
         }
     }
-
-
-
-
-
+}

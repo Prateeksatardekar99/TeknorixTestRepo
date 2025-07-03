@@ -1,199 +1,14 @@
-﻿//using Azure.Core;
-//using Humanizer;
-//using Microsoft.AspNetCore.Authorization;
-//using Microsoft.AspNetCore.Mvc;
-//using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow;
-//using Microsoft.EntityFrameworkCore;
-//using Technorix.DTOs;
-//using Technorix.Models;
-
-//namespace Technorix.Controllers
-//{
-
-
-//    [ApiController]
-
-//    [Authorize]
-
-//    [Route("api/v1/[controller]")]
-
-//    public class jobsController : Controller
-//    {
-//        private JobsDbContext context;
-
-
-
-
-//        public jobsController(JobsDbContext context)
-//        {
-
-//            this.context = context;
-//        }
-
-
-
-
-//        [HttpPost]
-//        public async Task<ActionResult> Create([FromBody] JobDto obj)
-//        {
-//            var job = new Job
-//            {
-//                Title = obj.Title,
-//                Description = obj.Description,
-//                Locationid = obj.LocationId,
-//                Departmentid = obj.DepartmentId,
-//                Closingdate = obj.ClosingDate,
-//                Posteddate = DateTime.UtcNow,
-//                Code = "JOB-" + (await context.Jobs.CountAsync() + 1).ToString()
-//            };
-
-//            context.Jobs.Add(job);
-//            await context.SaveChangesAsync();
-
-//            return Created($"http://localhost/api/v1/jobs/{job.Id}", null);
-//        }
-
-
-
-//        [Authorize(Roles = "User")]
-
-//        [HttpGet]
-//        public async Task<ActionResult<JobListResponseDto>> jobs([FromQuery] listDTO obj)
-//        {
-//            var query = context.Jobs
-//                .Include(j => j.Location)
-//                .Include(j => j.Department)
-//                .AsQueryable();
-
-//            // Search string
-//            if (!string.IsNullOrWhiteSpace(obj.SearchText))
-//            {
-//                query = query.Where(j => j.Title.Contains(obj.SearchText) || j.Description.Contains(obj.SearchText));
-//            }
-
-//            // Optional filters
-//            if (obj.locationId != 0)
-//            {
-//                query = query.Where(j => j.Locationid == obj.locationId);
-//            }
-
-//            if (obj.departmentId != 0)
-//            {
-//                query = query.Where(j => j.Departmentid == obj.departmentId);
-//            }
-
-//            var total = await query.CountAsync();
-
-//            var jobs = await query
-//                .OrderByDescending(j => j.Posteddate)
-//                .Skip((obj.pageNo - 1) * obj.pageSize)
-//                .Take(obj.pageSize)
-//                .Select(j => new JobListItemDto
-//                {
-//                    Id = j.Id,
-//                    Code = j.Code,
-//                    Title = j.Title,
-//                    Location = j.Location.Title,
-//                    Department = j.Department.Title,
-//                    PostedDate = j.Posteddate,
-//                    ClosingDate = j.Closingdate
-//                })
-//                .ToListAsync(); // <--- You missed this
-
-//            var response = new JobListResponseDto
-//            {
-//                Total = total,
-//                Data = jobs
-//            };
-
-//            return Ok(response);
-//        }
-
-
-
-
-
-
-
-
-//        [Authorize(Roles = "User")]
-
-
-//        [HttpGet("{id}")]
-//        public async Task<ActionResult> Details(int id)
-//        {
-
-//            var job = await context.Jobs
-//                .Include(j => j.Location)
-//                .Include(j => j.Department)
-//                .FirstOrDefaultAsync(j => j.Id == id);
-
-
-
-
-//            if (job == null) return NotFound();
-
-//            return Ok(new
-//            {
-//                job.Id,
-//                job.Code,
-//                job.Title,
-//                job.Description,
-
-//                Location = new
-//                {
-//                    job.Location.Id,
-//                    job.Location.Title,
-//                    job.Location.City,
-//                    job.Location.State,
-//                    job.Location.Country,
-//                    job.Location.Zip
-//                },
-//                Department = new
-//                {
-//                    job.Department.Id,
-//                    job.Department.Title
-//                },
-
-
-//                job.Posteddate,
-//                job.Closingdate
-//            });
-//        }
-
-
-
-//        [HttpPut("{id}")]
-
-//            public async Task<ActionResult> Update(int id, [FromBody] JobDto obj)
-
-
-//        {
-
-//            var job = await context.Jobs.FindAsync(id);
-//            if (job == null) return NotFound();
-
-//            job.Title = obj.Title;
-//            job.Description = obj.Description;
-//            job.Locationid = obj.LocationId;
-//            job.Departmentid = obj.DepartmentId;
-//            job.Closingdate = obj.ClosingDate;
-
-//            await context.SaveChangesAsync();
-//            return Ok();
-
-//        }
-//    }
-//}
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Technorix.DTOs;
 using Technorix.Models;
 
 namespace Technorix.Controllers
 {
+    /// <summary>
+    /// Handles job creation, listing, updating, and deletion.
+    /// </summary>
     [ApiController]
-  //  [Authorize]
     [Route("api/v1/[controller]")]
     public class JobsController : ControllerBase
     {
@@ -204,170 +19,213 @@ namespace Technorix.Controllers
             _jobRepo = jobRepo;
         }
 
-
         /// <summary>
-        /// create a new job.
+        /// Creates a new job entry.
         /// </summary>
-
-        /// <param name="obj">The job data to be created, including title, description, department, location, and closing date.</param>
-        /// <returns>
-        /// Returns a 201 Created response with the newly created job's details if successful.
-        /// Returns 400 Bad Request if the input data is invalid.
-        /// </returns>
-
-
-        [Authorize(Roles = "Admin")]
-
-        // POST: api/v1/jobs
+        /// <param name="obj">Job details to create.</param>
+        /// <returns>Returns 201 Created on success.</returns>
+        /// <response code="201">Job created successfully.</response>
+        /// <response code="500">Internal server error.</response>
         [HttpPost]
-        public async Task<ActionResult> Create([FromBody] JobDto obj)
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> Create([FromBody] JobRequestDto obj)
         {
-            var job = new Job
+            try
             {
-                Title = obj.Title,
-                Description = obj.Description,
-                Locationid = obj.LocationId,
-                Departmentid = obj.DepartmentId,
-                Closingdate = obj.ClosingDate,
-                Posteddate = DateTime.UtcNow,
-                Code = "JOB-" + DateTime.UtcNow.Ticks.ToString()
-            };
+                var job = new Job
+                {
+                    Title = obj.Title,
+                    Description = obj.Description,
+                    Locationid = obj.LocationId,
+                    Departmentid = obj.DepartmentId,
+                    Closingdate = obj.ClosingDate,
+                    Posteddate = DateTime.UtcNow,
+                    Code = "JOB-" + DateTime.UtcNow.ToString("yyyyMMddHHmmss")
+                };
 
-            await _jobRepo.Create(job);
-
-        
-                 return Created($"http://localhost/api/v1/jobs/{job.Id}", null);
-
+                await _jobRepo.Create(job);
+                return Created($"http://localhost/api/v1/jobs/{job.Id}", null);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         /// <summary>
-        /// Retrieves a list of jobs with pagination and filters.
+        /// Retrieves paginated list of jobs.
         /// </summary>
-        /// <param name="obj">Filter criteria such as search keyword, page number, and page size.</param>
-        /// <returns>
-        /// A paginated list of jobs with basic details like title, location, department, and dates.
-        /// </returns>
-        /// <response code="200">Returns the list of jobs</response>
+        /// <param name="obj">Filter and pagination criteria.</param>
+        /// <returns>Returns list of jobs with pagination.</returns>
         [HttpGet]
         [Authorize(Roles = "User,Admin")]
-        public async Task<ActionResult<JobListResponseDto>> Jobs([FromQuery] listDTO obj)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<JobListResponseDto>> Jobs([FromQuery] JoblistDTO obj)
         {
-            var jobs = await _jobRepo.Jobs(obj);
-            var total = await _jobRepo.JobsCount(obj);
-
-            var data = jobs.Select(j => new JobListItemDto
+            try
             {
-                Id = j.Id,
-                Code = j.Code,
-                Title = j.Title,
-                Location = j.Location?.Title,
-                Department = j.Department?.Title,
-                PostedDate = j.Posteddate,
-                ClosingDate = j.Closingdate
-            }).ToList();
+                var jobs = await _jobRepo.Jobs(obj);
+                var total = await _jobRepo.JobsCount(obj);
 
-            var response = new JobListResponseDto
+                var data = jobs.Select(j => new JobListItemResponseDto
+                {
+                    Id = j.Id,
+                    Code = j.Code,
+                    Title = j.Title,
+                    Location = j.Location?.Title,
+                    Department = j.Department?.Title,
+                    PostedDate = j.Posteddate,
+                    ClosingDate = j.Closingdate
+                }).ToList();
+
+                var response = new JobListResponseDto
+                {
+                    Total = total,
+                    Data = data
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
             {
-                Total = total,
-                Data = data
-            };
-
-            return Ok(response);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        
-
         /// <summary>
-        /// Retrieves detailed information about a specific job by ID.
+        /// Gets job details by ID.
         /// </summary>
-        /// <param name="id">The unique identifier of the job.</param>
-        /// <returns>
-        /// The job details including title, description, department, location, posted date, and closing date.
-        /// </returns>
-        /// <response code="200">Returns the job details</response>
-        /// <response code="404">If the job is not found</response>
-       
-
+        /// <param name="id">Job ID.</param>
+        /// <returns>Job details or 404 if not found.</returns>
         [HttpGet("{id}")]
         [Authorize(Roles = "User,Admin")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Details(int id)
         {
-            var job = await _jobRepo.Details(id);
-            if (job == null) return NotFound();
-
-            return Ok(new
+            try
             {
-                job.Id,
-                job.Code,
-                job.Title,
-                job.Description,
-                Location = new
+                var job = await _jobRepo.Details(id);
+                if (job == null) return NotFound();
+
+                //return Ok(new
+                //{
+                //    job.Id,
+                //    job.Code,
+                //    job.Title,
+                //    job.Description,
+                //    Location = new
+                //    {
+                //        job.Location?.Id,
+                //        job.Location?.Title,
+                //        job.Location?.City,
+                //        job.Location?.State,
+                //        job.Location?.Country,
+                //        job.Location?.Zip
+                //    },
+                //    Department = new
+                //    {
+                //        job.Department?.Id,
+                //        job.Department?.Title
+                //    },
+                //    job.Posteddate,
+                //    job.Closingdate
+                //});
+
+
+                return Ok(new JobDetailsResponseDto
                 {
-                    job.Location?.Id,
-                    job.Location?.Title,
-                    job.Location?.City,
-                    job.Location?.State,
-                    job.Location?.Country,
-                    job.Location?.Zip
-                },
-                Department = new
-                {
-                    job.Department?.Id,
-                    job.Department?.Title
-                },
-                job.Posteddate,
-                job.Closingdate
-            });
+                    Id = job.Id,
+                    Code = job.Code,
+                    Title = job.Title,
+                    Description = job.Description,
+                    Location = new LocationResponseDto
+                    {
+                        Id = job.Location?.Id ?? 0,
+                        Title = job.Location?.Title,
+                        City = job.Location?.City,
+                        State = job.Location?.State,
+                        Country = job.Location?.Country,
+                        Zip = job.Location?.Zip ?? 0
+                    },
+                    Department = new DepartmentResponseDto
+                    {
+                        Id = job.Department?.Id ?? 0,
+                        Title = job.Department?.Title
+                    },
+                    Posteddate = job.Posteddate,
+                    Closingdate = job.Closingdate
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-
         /// <summary>
-        /// Updates an existing job.
+        /// Updates an existing job by ID.
         /// </summary>
-        /// <param name="id">The unique identifier of the job to be updated.</param>
-        /// <param name="obj">The updated job data.</param>
-        /// <returns>
-        /// Returns 200 OK if the job is updated successfully.
-        /// Returns 404 Not Found if the job does not exist.
-        /// </returns>
+        /// <param name="id">Job ID.</param>
+        /// <param name="obj">Updated job data.</param>
+        /// <returns>200 OK or 404 Not Found.</returns>
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
-
-        public async Task<ActionResult> Update(int id, [FromBody] JobDto obj)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> Update(int id, [FromBody] JobRequestDto obj)
         {
-            var job = await _jobRepo.Details(id);
-            if (job == null) return NotFound();
+            try
+            {
+                var job = await _jobRepo.Details(id);
+                if (job == null) return NotFound();
 
-            job.Title = obj.Title;
-            job.Description = obj.Description;
-            job.Locationid = obj.LocationId;
-            job.Departmentid = obj.DepartmentId;
-            job.Closingdate = obj.ClosingDate;
+                job.Title = obj.Title;
+                job.Description = obj.Description;
+                job.Locationid = obj.LocationId;
+                job.Departmentid = obj.DepartmentId;
+                job.Closingdate = obj.ClosingDate;
 
-            await _jobRepo.Update(job);
-            return Ok();
+                await _jobRepo.Update(job);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         /// <summary>
-        /// Deletes an existing job.
+        /// Deletes a job by ID.
         /// </summary>
-        /// <param name="id">The ID of the job to delete.</param>
-        /// <returns>
-        /// Returns 204 No Content if deletion is successful.
-        /// Returns 404 Not Found if the job does not exist.
-        /// </returns>
-        
-
-        [Authorize(Roles = "Admin")]
-
+        /// <param name="id">Job ID.</param>
+        /// <returns>200 sucess or 404 Not Found.</returns>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Delete(int id)
         {
-            var job = await _jobRepo.Details(id);
-            if (job == null) return NotFound();
+            try
+            {
+                var job = await _jobRepo.Details(id);
+                if (job == null) return NotFound();
 
-            await _jobRepo.Delete(id);
-            return NoContent();
+                await _jobRepo.Delete(id);
+                return Ok(new { message = "Deleted job " }); // Return 200 with message
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }

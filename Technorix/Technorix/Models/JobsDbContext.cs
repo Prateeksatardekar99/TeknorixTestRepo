@@ -116,11 +116,11 @@ public partial class JobsDbContext : DbContext
             entity.HasIndex(e => e.Username, "UQ__USERS__B15BE12EE8938D6A").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.Createdate)
+            entity.Property(e => e.CreateDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("CREATEDATE");
-            entity.Property(e => e.Passwordhash)
+            entity.Property(e => e.PasswordHash)
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("PASSWORDHASH");
@@ -128,7 +128,7 @@ public partial class JobsDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("USERNAME");
-            entity.Property(e => e.Userrole)
+            entity.Property(e => e.UserRole)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("USERROLE");

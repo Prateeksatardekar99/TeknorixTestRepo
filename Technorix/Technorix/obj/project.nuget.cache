@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2tttbQLAO7E=",
+  "dgSpecHash": "DzY4JIHs8zE=",
   "success": true,
-  "projectFilePath": "D:\\TechnorixWebapi\\Technorix\\Technorix\\Technorix.csproj",
+  "projectFilePath": "D:\\Technical_test_rework\\TeknorixTestRepo\\Technorix\\Technorix\\Technorix.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Pratik Satadekar\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Pratik Satadekar\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

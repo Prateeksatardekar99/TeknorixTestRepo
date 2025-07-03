@@ -4,57 +4,273 @@
         <name>Technorix</name>
     </assembly>
     <members>
-        <member name="M:Technorix.Controllers.JobsController.Create(Technorix.DTOs.JobDto)">
+        <member name="T:Technorix.Controllers.DepartmentsController">
             <summary>
-            create a new job.
+            Manages department-related operations.
             </summary>
-            <param name="obj">The job data to be created, including title, description, department, location, and closing date.</param>
-            <returns>
-            Returns a 201 Created response with the newly created job's details if successful.
-            Returns 400 Bad Request if the input data is invalid.
-            </returns>
         </member>
-        <member name="M:Technorix.Controllers.JobsController.Jobs(Technorix.DTOs.listDTO)">
+        <member name="M:Technorix.Controllers.DepartmentsController.Create(Technorix.DTOs.DepartmentCreateDto)">
             <summary>
-            Retrieves a list of jobs with pagination and filters.
+            Creates a new department.
             </summary>
-            <param name="obj">Filter criteria such as search keyword, page number, and page size.</param>
-            <returns>
-            A paginated list of jobs with basic details like title, location, department, and dates.
-            </returns>
-            <response code="200">Returns the list of jobs</response>
+        </member>
+        <member name="M:Technorix.Controllers.DepartmentsController.GetDepartments">
+            <summary>
+            Gets a list of all departments.
+            </summary>
+        </member>
+        <member name="M:Technorix.Controllers.DepartmentsController.UpdateDepartment(System.Int32,Technorix.DTOs.DepartmentCreateDto)">
+            <summary>
+            Updates an existing department.
+            </summary>
+        </member>
+        <member name="T:Technorix.Controllers.JobsController">
+            <summary>
+            Handles job creation, listing, updating, and deletion.
+            </summary>
+        </member>
+        <member name="M:Technorix.Controllers.JobsController.Create(Technorix.DTOs.JobRequestDto)">
+            <summary>
+            Creates a new job entry.
+            </summary>
+            <param name="obj">Job details to create.</param>
+            <returns>Returns 201 Created on success.</returns>
+            <response code="201">Job created successfully.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:Technorix.Controllers.JobsController.Jobs(Technorix.DTOs.JoblistDTO)">
+            <summary>
+            Retrieves paginated list of jobs.
+            </summary>
+            <param name="obj">Filter and pagination criteria.</param>
+            <returns>Returns list of jobs with pagination.</returns>
         </member>
         <member name="M:Technorix.Controllers.JobsController.Details(System.Int32)">
             <summary>
-            Retrieves detailed information about a specific job by ID.
+            Gets job details by ID.
             </summary>
-            <param name="id">The unique identifier of the job.</param>
-            <returns>
-            The job details including title, description, department, location, posted date, and closing date.
-            </returns>
-            <response code="200">Returns the job details</response>
-            <response code="404">If the job is not found</response>
+            <param name="id">Job ID.</param>
+            <returns>Job details or 404 if not found.</returns>
         </member>
-        <member name="M:Technorix.Controllers.JobsController.Update(System.Int32,Technorix.DTOs.JobDto)">
+        <member name="M:Technorix.Controllers.JobsController.Update(System.Int32,Technorix.DTOs.JobRequestDto)">
             <summary>
-            Updates an existing job.
+            Updates an existing job by ID.
             </summary>
-            <param name="id">The unique identifier of the job to be updated.</param>
-            <param name="obj">The updated job data.</param>
-            <returns>
-            Returns 200 OK if the job is updated successfully.
-            Returns 404 Not Found if the job does not exist.
-            </returns>
+            <param name="id">Job ID.</param>
+            <param name="obj">Updated job data.</param>
+            <returns>200 OK or 404 Not Found.</returns>
         </member>
         <member name="M:Technorix.Controllers.JobsController.Delete(System.Int32)">
             <summary>
-            Deletes an existing job.
+            Deletes a job by ID.
             </summary>
-            <param name="id">The ID of the job to delete.</param>
-            <returns>
-            Returns 204 No Content if deletion is successful.
-            Returns 404 Not Found if the job does not exist.
-            </returns>
+            <param name="id">Job ID.</param>
+            <returns>200 sucess or 404 Not Found.</returns>
+        </member>
+        <member name="T:Technorix.Controllers.LocationController">
+            <summary>
+            Manages location-related operations.
+            </summary>
+        </member>
+        <member name="M:Technorix.Controllers.LocationController.CreateLocation(Technorix.DTOs.LocationRequestDto)">
+            <summary>
+            Creates a new location.
+            </summary>
+        </member>
+        <member name="M:Technorix.Controllers.LocationController.GetLocations">
+            <summary>
+            Gets a list of all locations.
+            </summary>
+        </member>
+        <member name="M:Technorix.Controllers.LocationController.UpdateLocations(System.Int32,Technorix.DTOs.LocationRequestDto)">
+            <summary>
+            Updates an existing location by ID.
+            </summary>
+        </member>
+        <member name="T:Technorix.Controllers.LoginController">
+            <summary>
+            Handles user authentication and token generation.
+            </summary>
+        </member>
+        <member name="M:Technorix.Controllers.LoginController.Login(Technorix.DTOs.loginRequestDTO)">
+            <summary>
+            Authenticates the user and returns a JWT token.
+            </summary>
+        </member>
+        <member name="T:Technorix.DTOs.DepartmentCreateDto">
+            <summary>
+            DTO used to create a new department.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.DepartmentCreateDto.Title">
+            <summary>
+            Title of the department.
+            </summary>
+        </member>
+        <member name="T:Technorix.DTOs.DepartmentResponseDto">
+            <summary>
+            DTO returned after department creation or retrieval.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.DepartmentResponseDto.Id">
+            <summary>
+            ID of the department.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.DepartmentResponseDto.Title">
+            <summary>
+            Title of the department.
+            </summary>
+        </member>
+        <member name="T:Technorix.DTOs.JobRequestDto">
+            <summary>
+            DTO used for creating or updating a Job.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JobRequestDto.Title">
+            <summary>
+            The title of the job.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JobRequestDto.Description">
+            <summary>
+            The job description.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JobRequestDto.LocationId">
+            <summary>
+            The ID of the location where the job is based.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JobRequestDto.DepartmentId">
+            <summary>
+            The ID of the department offering the job.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JobRequestDto.ClosingDate">
+            <summary>
+            The date when the job listing will close.
+            </summary>
+        </member>
+        <member name="T:Technorix.DTOs.JoblistDTO">
+            <summary>
+            DTO used for paginated job listing requests with filters.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JoblistDTO.SearchText">
+            <summary>
+            Text to search for in job titles or descriptions.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JoblistDTO.pageNo">
+            <summary>
+            Page number to retrieve.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JoblistDTO.pageSize">
+            <summary>
+            Number of jobs per page.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JoblistDTO.locationId">
+            <summary>
+            Optional location filter (0 = All locations).
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JoblistDTO.departmentId">
+            <summary>
+            Optional department filter (0 = All departments).
+            </summary>
+        </member>
+        <member name="T:Technorix.DTOs.JobListResponseDto">
+            <summary>
+            Response DTO for a paginated list of jobs.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JobListResponseDto.Total">
+            <summary>
+            Total number of jobs matching the filters.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JobListResponseDto.Data">
+            <summary>
+            List of job items in the current page.
+            </summary>
+        </member>
+        <member name="T:Technorix.DTOs.JobListItemResponseDto">
+            <summary>
+            Summary DTO for each job displayed in job listings.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JobListItemResponseDto.Id">
+            <summary>
+            Unique job identifier.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JobListItemResponseDto.Code">
+            <summary>
+            Unique code for the job.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JobListItemResponseDto.Title">
+            <summary>
+            Job title.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JobListItemResponseDto.Location">
+            <summary>
+            Location name.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JobListItemResponseDto.Department">
+            <summary>
+            Department name.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JobListItemResponseDto.PostedDate">
+            <summary>
+            Date the job was posted.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JobListItemResponseDto.ClosingDate">
+            <summary>
+            Closing date for the job application.
+            </summary>
+        </member>
+        <member name="T:Technorix.DTOs.JwtSettings">
+            <summary>
+            JWT token configuration settings.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JwtSettings.Issuer">
+            <summary>
+            JWT issuer.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JwtSettings.Audience">
+            <summary>
+            JWT audience.
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JwtSettings.Key">
+            <summary>
+            JWT secret key (should be 32+ characters for HMAC).
+            </summary>
+        </member>
+        <member name="P:Technorix.DTOs.JwtSettings.ExpiryMinutes">
+            <summary>
+            Expiry time for the token in minutes.
+            </summary>
+        </member>
+        <member name="T:Technorix.DTOs.LocationRequestDto">
+            <summary>
+            DTO used to create a new location.
+            </summary>
+        </member>
+        <member name="T:Technorix.DTOs.LocationResponseDto">
+            <summary>
+            DTO returned after location creation or retrieval.
+            </summary>
         </member>
     </members>
 </doc>

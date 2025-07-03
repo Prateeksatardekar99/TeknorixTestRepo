@@ -1,60 +1,75 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Moq;
-using Technorix.Models;
-using Technorix.DTOs;
-using Technorix.Controllers.Technorix.Controllers;
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Technorix.Controllers;
-
+using Technorix.DTOs;
+using Technorix.Models;
+using Technorix.Repository;
 
 namespace TestProject
 {
-    
+    public class JobsControllerTests
+    {
+        private readonly Mock<IJobRepository> _mockRepo;
+        private readonly JobsController _controller;
 
-        public class jobsControllerTests
+        public JobsControllerTests()
         {
-            private readonly Mock<IJobRepository> _mockRepo;
-            private readonly JobsController _controller;
+            _mockRepo = new Mock<IJobRepository>();
+            _controller = new JobsController(_mockRepo.Object);
+        }
 
-            public jobsControllerTests()
+        [Fact]
+        public async Task Create_ValidJob_ReturnsCreated()
+        {
+            var dto = new JobRequestDto
             {
-                _mockRepo = new Mock<IJobRepository>();
-                _controller = new JobsController(_mockRepo.Object);
-            }
+                Title = "new job",
+                Description = "Test data",
+                LocationId = 1,
+                DepartmentId = 2,
+                ClosingDate = DateTime.UtcNow.AddDays(10)
+            };
 
-            [Fact]
-            public async Task Create_ValidJob_ReturnsCreated()
+            _mockRepo.Setup(r => r.Create(It.IsAny<Job>())).Returns(Task.CompletedTask);
+
+            var result = await _controller.Create(dto);
+
+            var created = result as CreatedResult;
+            created.Should().NotBeNull();
+            created!.StatusCode.Should().Be(201);
+        }
+
+        [Fact]
+        public async Task Create_ThrowsException_Returns500()
+        {
+            var dto = new JobRequestDto
             {
-                var dto = new JobDto
-                {
-                    Title = "new job",
-                    Description = "Test data",
-                    LocationId = 1,
-                    DepartmentId = 2,
-                    ClosingDate = DateTime.UtcNow.AddDays(10)
-                };
+                Title = "Fail job",
+                Description = "Error",
+                LocationId = 1,
+                DepartmentId = 2,
+                ClosingDate = DateTime.UtcNow.AddDays(10)
+            };
 
-                _mockRepo.Setup(r => r.Create(It.IsAny<Job>())).Returns(Task.CompletedTask);
+            _mockRepo.Setup(r => r.Create(It.IsAny<Job>())).ThrowsAsync(new Exception("Simulated error"));
 
-                var result = await _controller.Create(dto);
+            var result = await _controller.Create(dto);
 
-                var created = result as CreatedResult;
-                created.Should().NotBeNull();
-                created.StatusCode.Should().Be(201);
-            }
+            var error = result as ObjectResult;
+            error.Should().NotBeNull();
+            error!.StatusCode.Should().Be(500);
+            error.Value.ToString().Should().Contain("Simulated error");
+        }
 
-            [Fact]
-            public async Task Jobs_ReturnsJobList()
-            {
-                _mockRepo.Setup(r => r.Jobs(It.IsAny<listDTO>())).ReturnsAsync(new List<Job>
+        [Fact]
+        public async Task Jobs_ReturnsJobList()
+        {
+            _mockRepo.Setup(r => r.Jobs(It.IsAny<JoblistDTO>())).ReturnsAsync(new List<Job>
             {
                 new Job
                 {
@@ -68,105 +83,116 @@ namespace TestProject
                 }
             });
 
-                _mockRepo.Setup(r => r.JobsCount(It.IsAny<listDTO>())).ReturnsAsync(1);
+            _mockRepo.Setup(r => r.JobsCount(It.IsAny<JoblistDTO>())).ReturnsAsync(1);
 
-                var result = await _controller.Jobs(new listDTO());
+            var result = await _controller.Jobs(new JoblistDTO());
 
-                var okResult = result.Result as OkObjectResult;
-                okResult.Should().NotBeNull();
+            var okResult = result.Result as OkObjectResult;
+            okResult.Should().NotBeNull();
 
-                var response = okResult.Value as JobListResponseDto;
-                response.Should().NotBeNull();
-                response.Total.Should().Be(1);
-                response.Data.Should().HaveCount(1);
-            }
+            var response = okResult!.Value as JobListResponseDto;
+            response.Should().NotBeNull();
+            response!.Total.Should().Be(1);
+            response.Data.Should().HaveCount(1);
+        }
 
-            [Fact]
-            public async Task Details_ValidId_ReturnsJob()
+        [Fact]
+        public async Task Details_ValidId_ReturnsJob()
+        {
+            _mockRepo.Setup(r => r.Details(1)).ReturnsAsync(new Job
             {
-                _mockRepo.Setup(r => r.Details(1)).ReturnsAsync(new Job
+                Id = 1,
+                Title = "Test Job",
+                Description = "Job Desc",
+                Code = "JOB-123",
+                Location = new Location
                 {
                     Id = 1,
-                    Title = "Test Job",
-                    Description = "Job Desc",
-                    Code = "JOB-123",
-                    Location = new Location { Id = 1, Title = "goa", City = "panjim", State = "ga", Country = "ind", Zip = 403511 },
-                    Department = new Department { Id = 1, Title = "Engineering" },
-                    Posteddate = DateTime.UtcNow,
-                    Closingdate = DateTime.UtcNow.AddDays(5)
-                });
+                    Title = "Goa",
+                    City = "Panjim",
+                    State = "GA",
+                    Country = "India",
+                    Zip = 403511
+                },
+                Department = new Department { Id = 1, Title = "Engineering" },
+                Posteddate = DateTime.UtcNow,
+                Closingdate = DateTime.UtcNow.AddDays(5)
+            });
 
-                var result = await _controller.Details(1);
+            var result = await _controller.Details(1);
+            var okResult = result as OkObjectResult;
+            okResult.Should().NotBeNull();
 
-                var okResult = result as OkObjectResult;
-                okResult.Should().NotBeNull();
-            }
+            dynamic job = okResult!.Value!;
 
-            [Fact]
-            public async Task Details_InvalidId_ReturnsNotFound()
+            // CAST THE DYNAMIC PROPERTIES
+            ((string)job.Title).Should().Be("Test Job");
+            ((string)job.Department.Title).Should().Be("Engineering");
+            ((string)job.Location.Title).Should().Be("Goa");
+        }
+
+
+        [Fact]
+        public async Task Details_InvalidId_ReturnsNotFound()
+        {
+            _mockRepo.Setup(r => r.Details(99)).ReturnsAsync((Job)null!);
+
+            var result = await _controller.Details(99);
+
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task Update_ValidId_UpdatesJob()
+        {
+            var existingJob = new Job { Id = 1, Title = "Old Job" };
+
+            _mockRepo.Setup(r => r.Details(1)).ReturnsAsync(existingJob);
+            _mockRepo.Setup(r => r.Update(It.IsAny<Job>())).Returns(Task.CompletedTask);
+
+            var dto = new JobRequestDto
             {
-                _mockRepo.Setup(r => r.Details(99)).ReturnsAsync((Job)null!);
+                Title = "Updated Title",
+                Description = "Updated data",
+                DepartmentId = 1,
+                LocationId = 1,
+                ClosingDate = DateTime.UtcNow.AddDays(5)
+            };
 
-                var result = await _controller.Details(99);
+            var result = await _controller.Update(1, dto);
 
-                result.Should().BeOfType<NotFoundResult>();
-            }
+            result.Should().BeOfType<OkResult>();
+        }
 
-            [Fact]
-            public async Task Update_ValidId_UpdatesJob()
-            {
-                var existingJob = new Job { Id = 1, Title = "checking existig Job" };
+        [Fact]
+        public async Task Update_InvalidId_ReturnsNotFound()
+        {
+            _mockRepo.Setup(r => r.Details(99)).ReturnsAsync((Job)null!);
 
-                _mockRepo.Setup(r => r.Details(1)).ReturnsAsync(existingJob);
-                _mockRepo.Setup(r => r.Update(It.IsAny<Job>())).Returns(Task.CompletedTask);
+            var result = await _controller.Update(99, new JobRequestDto());
 
-                var dto = new JobDto
-                {
-                    Title = "Updated Title",
-                    Description = "Updated data",
-                    DepartmentId = 1,
-                    LocationId = 1,
-                    ClosingDate = DateTime.UtcNow.AddDays(5)
-                };
+            result.Should().BeOfType<NotFoundResult>();
+        }
 
-                var result = await _controller.Update(1, dto);
+        [Fact]
+        public async Task Delete_ValidId_ReturnsNoContent()
+        {
+            _mockRepo.Setup(r => r.Details(1)).ReturnsAsync(new Job { Id = 1 });
+            _mockRepo.Setup(r => r.Delete(1)).Returns(Task.CompletedTask);
 
-                result.Should().BeOfType<OkResult>();
-            }
+            var result = await _controller.Delete(1);
 
-            [Fact]
-            public async Task Update_InvalidId_ReturnsNotFound()
-            {
-                _mockRepo.Setup(r => r.Details(99)).ReturnsAsync((Job)null!);
+            result.Should().BeOfType<NoContentResult>();
+        }
 
-                var result = await _controller.Update(99, new JobDto());
+        [Fact]
+        public async Task Delete_InvalidId_ReturnsNotFound()
+        {
+            _mockRepo.Setup(r => r.Details(999)).ReturnsAsync((Job)null!);
 
-                result.Should().BeOfType<NotFoundResult>();
-            }
+            var result = await _controller.Delete(999);
 
-            [Fact]
-            public async Task Delete_ValidId_ReturnsNoContent()
-            {
-                _mockRepo.Setup(r => r.Details(1)).ReturnsAsync(new Job { Id = 1 });
-                _mockRepo.Setup(r => r.Delete(1)).Returns(Task.CompletedTask);
-
-                var result = await _controller.Delete(1);
-
-                result.Should().BeOfType<NoContentResult>();
-            }
-
-            [Fact]
-            public async Task Delete_InvalidId_ReturnsNotFound()
-            {
-                _mockRepo.Setup(r => r.Details(999)).ReturnsAsync((Job)null!);
-
-                var result = await _controller.Delete(999);
-
-                result.Should().BeOfType<NotFoundResult>();
-            }
+            result.Should().BeOfType<NotFoundResult>();
         }
     }
-
-
-
-
+}

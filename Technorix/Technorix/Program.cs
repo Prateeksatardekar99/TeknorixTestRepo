@@ -6,11 +6,16 @@ using System.Reflection;
 using System.Text;
 using Technorix.DTOs;
 using Technorix.Models;
+using Technorix.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddScoped<IJobRepository, JobRepository>();
+builder.Services.AddScoped<IdepartmentsRepository, DepartmentsRepository>();
+builder.Services.AddScoped<IlocationsRepository,locationsRepository>();
+builder.Services.AddScoped<ILoginRepository, LoginRepository>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -53,7 +58,6 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddDbContext<JobsDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));

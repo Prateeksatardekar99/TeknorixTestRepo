@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\TechnorixWebapi\\Technorix\\Technorix\\Technorix.csproj": {}
+    "D:\\Technical_test_rework\\TeknorixTestRepo\\Technorix\\Technorix\\Technorix.csproj": {}
   },
   "projects": {
-    "D:\\TechnorixWebapi\\Technorix\\Technorix\\Technorix.csproj": {
+    "D:\\Technical_test_rework\\TeknorixTestRepo\\Technorix\\Technorix\\Technorix.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\TechnorixWebapi\\Technorix\\Technorix\\Technorix.csproj",
+        "projectUniqueName": "D:\\Technical_test_rework\\TeknorixTestRepo\\Technorix\\Technorix\\Technorix.csproj",
         "projectName": "Technorix",
-        "projectPath": "D:\\TechnorixWebapi\\Technorix\\Technorix\\Technorix.csproj",
+        "projectPath": "D:\\Technical_test_rework\\TeknorixTestRepo\\Technorix\\Technorix\\Technorix.csproj",
         "packagesPath": "C:\\Users\\Pratik Satadekar\\.nuget\\packages\\",
-        "outputPath": "D:\\TechnorixWebapi\\Technorix\\Technorix\\obj\\",
+        "outputPath": "D:\\Technical_test_rework\\TeknorixTestRepo\\Technorix\\Technorix\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Pratik Satadekar\\AppData\\Roaming\\NuGet\\NuGet.Config",

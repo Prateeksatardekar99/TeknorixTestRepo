@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Technorix")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+30f2a21ea42425d700a8fa65696254e22c46c1db")]
 [assembly: System.Reflection.AssemblyProductAttribute("Technorix")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Technorix")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

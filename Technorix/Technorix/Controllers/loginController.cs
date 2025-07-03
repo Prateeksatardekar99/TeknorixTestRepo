@@ -3,101 +3,61 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using Technorix.DTOs;
 using Technorix.Models;
-
+using Technorix.Repository;
 
 namespace Technorix.Controllers
 {
-
-
-    namespace Technorix.Controllers
+    /// <summary>
+    /// Handles user authentication and token generation.
+    /// </summary>
+    [ApiController]
+    [AllowAnonymous]
+    [Route("api/[controller]")]
+    public class LoginController : ControllerBase
     {
-        [ApiController]
-        [AllowAnonymous]
+        private readonly ILoginRepository _loginRepo;
 
-
-        [Route("api/[controller]")]
-
-        public class loginController : Controller
+        public LoginController(ILoginRepository loginRepo)
         {
+            _loginRepo = loginRepo;
+        }
+        /// <summary>
+        /// Authenticates the user and returns a JWT token.
+        /// </summary>
 
 
+        [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-            private readonly JwtSettings objjwtSettings;
-            private JobsDbContext context;
 
-
-            public loginController(JobsDbContext dbContext, IOptions<JwtSettings> obj)
+        public async Task<ActionResult> Login([FromBody] loginRequestDTO login)
+        {
+            try
             {
-                this.objjwtSettings = obj.Value;
-                this.context = dbContext;
-            }
 
-            [HttpPost("login")]
-            public async Task<ActionResult> Login([FromBody] loginDTO login)
-            {
-                var user = await context.Users
-                    .FirstOrDefaultAsync(u => u.Username == login.Username);
+                if (login == null || string.IsNullOrWhiteSpace(login.Username) || string.IsNullOrWhiteSpace(login.Password))
+                    return BadRequest("Username and password must be provided.");
 
-                var _hasher = new PasswordHasher<object>();
-
-
-                var passwordencrytion = _hasher.HashPassword(null, login.Username);
-
-
+                var user = await _loginRepo.GetUserByUsername(login.Username);
                 if (user == null)
                     return Unauthorized("User not found");
 
-
-                // `login.PasswordHash` should be the plain password from user input (bad name, better to rename it to just `Password`)
-                var result = _hasher.VerifyHashedPassword(user, user.Passwordhash, login.Password);
-
-                if (result == PasswordVerificationResult.Failed)
+                if (!_loginRepo.VerifyPassword(user.PasswordHash, login.Password))
                     return Unauthorized("Invalid password");
 
-                var token = GenerateJwtToken(user.Username,user.Userrole);
-                return Ok(new { token });
+                var token = _loginRepo.GenerateJwtToken(user);
+                return Ok(new TokenResponseDto { Token = token });
+
+
             }
-
-
-            
-            
-        
-
-
-
-        private string GenerateJwtToken(string username,string userRole)
+            catch (Exception ex)
             {
-                var claims = new[]
-                {
-                new Claim(JwtRegisteredClaimNames.Sub, username),
-                                new Claim(ClaimTypes.Role, userRole)
-
-
-            };
-
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(objjwtSettings.Key ?? "DefaultKeyMustBeSecureAnd32CharLong"));
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-                var token = new JwtSecurityToken(
-                    issuer: objjwtSettings.Issuer,
-                    audience: objjwtSettings.Audience,
-                    claims: claims,
-                    expires: DateTime.UtcNow.AddMinutes(objjwtSettings.ExpiryMinutes),
-                    signingCredentials: creds
-                );
-
-                return new JwtSecurityTokenHandler().WriteToken(token);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-
-
-
     }
-
 }

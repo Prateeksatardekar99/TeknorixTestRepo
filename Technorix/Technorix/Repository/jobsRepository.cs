@@ -19,7 +19,7 @@ public class JobRepository : IJobRepository
             .FirstOrDefaultAsync(j => j.Id == id);
     }
 
-    public async Task<IEnumerable<Job>> Jobs(listDTO filters)
+    public async Task<IEnumerable<Job>> Jobs(JoblistDTO filters)
     {
         var query = _context.Jobs
             .Include(j => j.Location)
@@ -50,7 +50,7 @@ public class JobRepository : IJobRepository
             .ToListAsync();
     }
 
-    public async Task<int> JobsCount(listDTO filters)
+    public async Task<int> JobsCount(JoblistDTO filters)
     {
         var query = _context.Jobs.AsQueryable();
 
@@ -76,12 +76,34 @@ public class JobRepository : IJobRepository
 
     public async Task Create(Job job)
     {
+        var locationExists = await _context.Locations.AnyAsync(l => l.Id == job.Locationid);
+        if (!locationExists)
+            throw new InvalidOperationException($"Location with ID {job.Locationid} does not exist.");
+
+        var departmentExists = await _context.Departments.AnyAsync(d => d.Id == job.Departmentid);
+        if (!departmentExists)
+            throw new InvalidOperationException($"Department with ID {job.Departmentid} does not exist.");
+
+        // If both checks pass, then only proceed to save data
         await _context.Jobs.AddAsync(job);
         await _context.SaveChangesAsync();
     }
 
     public async Task Update(Job job)
     {
+        var locationExists = await _context.Locations.AnyAsync(l => l.Id == job.Locationid);
+        if (!locationExists)
+        {
+            throw new InvalidOperationException($"Location with ID {job.Locationid} does not exist.");
+        }
+
+        // Check if Department exists
+        var departmentExists = await _context.Departments.AnyAsync(d => d.Id == job.Departmentid);
+        if (!departmentExists)
+        {
+            throw new InvalidOperationException($"Department with ID {job.Departmentid} does not exist.");
+        }
+
         _context.Jobs.Update(job);
         await _context.SaveChangesAsync();
     }

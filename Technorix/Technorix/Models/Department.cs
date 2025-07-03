@@ -8,6 +8,7 @@ public partial class Department
 {
     public int Id { get; set; }
     [Required]
+    [MaxLength(100)]
     public string Title { get; set; } = null!;
 
     public virtual ICollection<Job> Jobs { get; set; } = new List<Job>();

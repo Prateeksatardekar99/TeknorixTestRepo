@@ -3,7 +3,7 @@
 
 namespace Technorix.DTOs
 {
-    public class loginDTO
+    public class loginRequestDTO
     {
         [Required]
 
@@ -14,5 +14,10 @@ namespace Technorix.DTOs
 
         public string Password { get; set; } = null!;
 
+    }
+
+    public class TokenResponseDto
+    {
+        public string Token { get; set; } = string.Empty;
     }
 }
